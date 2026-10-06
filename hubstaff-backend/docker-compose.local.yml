@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    build: .
+    environment:
+      DB_URL: jdbc:mariadb://db:3306/${DB_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      BOOTSTRAP_ADMIN_ENABLED: ${BOOTSTRAP_ADMIN_ENABLED}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD}
+      INITIAL_ADMIN_EMPLOYEE_CODE: ${INITIAL_ADMIN_EMPLOYEE_CODE}
+      INITIAL_ADMIN_FIRST_NAME: ${INITIAL_ADMIN_FIRST_NAME}
+      INITIAL_ADMIN_LAST_NAME: ${INITIAL_ADMIN_LAST_NAME}
+      INITIAL_ADMIN_PHONE: ${INITIAL_ADMIN_PHONE}
+      INITIAL_ADMIN_HIRE_DATE: ${INITIAL_ADMIN_HIRE_DATE}
+      GEOCODING_ENABLED: ${GEOCODING_ENABLED}
+      GEOCODING_USER_AGENT: ${GEOCODING_USER_AGENT}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  gateway:
+    build: ../hubstaff-angular-frontend
+    environment:
+      LAN_IP: ${LAN_IP}
+    ports:
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  mariadb_data:
+  caddy_data:
+  caddy_config:

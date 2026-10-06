@@ -1,0 +1,14 @@
+https://{$LAN_IP} {
+    # Caddy creates a local CA. Test devices must trust its root certificate.
+    tls internal
+    root * /usr/share/caddy
+    log {
+        output stdout
+        format console
+    }
+
+    reverse_proxy /api/* backend:8080
+
+    try_files {path} /index.html
+    file_server
+}

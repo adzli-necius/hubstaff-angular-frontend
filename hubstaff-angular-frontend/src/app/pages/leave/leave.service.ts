@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../core/api.config';
 
 export interface LeaveRequestResponseDto {
   id: number;
@@ -39,7 +40,7 @@ export interface ApiResponse<T> {
 })
 export class LeaveService {
 
-  private apiUrl = 'http://localhost:8080/api/leave-requests';
+  private apiUrl = `${API_BASE_URL}/leave-requests`;
 
   constructor(private http: HttpClient) {}
 

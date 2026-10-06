@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApiResponse } from '../employees/employee-api.service';
+import { API_BASE_URL } from '../../core/api.config';
 
-const API_URL = 'http://localhost:8080/api/attendance';
+const API_URL = `${API_BASE_URL}/attendance`;
 
 export interface AttendanceRecord {
   id: number;
@@ -91,16 +92,16 @@ export class AttendanceApiService {
   }
 
   getPendingOvertime(): Observable<ApiResponse<OvertimeRecord[]>> {
-    return this.http.get<ApiResponse<OvertimeRecord[]>>('http://localhost:8080/api/overtime/pending');
+    return this.http.get<ApiResponse<OvertimeRecord[]>>(`${API_BASE_URL}/overtime/pending`);
   }
 
   approveOvertime(id: number, approvedMinutes: number, managerNote: string): Observable<ApiResponse<OvertimeRecord>> {
     return this.http.patch<ApiResponse<OvertimeRecord>>(
-      `http://localhost:8080/api/overtime/${id}/approve`, { approvedMinutes, managerNote });
+      `${API_BASE_URL}/overtime/${id}/approve`, { approvedMinutes, managerNote });
   }
 
   rejectOvertime(id: number, managerNote: string): Observable<ApiResponse<OvertimeRecord>> {
     return this.http.patch<ApiResponse<OvertimeRecord>>(
-      `http://localhost:8080/api/overtime/${id}/reject`, { approvedMinutes: 0, managerNote });
+      `${API_BASE_URL}/overtime/${id}/reject`, { approvedMinutes: 0, managerNote });
   }
 }

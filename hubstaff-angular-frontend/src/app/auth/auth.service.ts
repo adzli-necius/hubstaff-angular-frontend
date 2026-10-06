@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { API_BASE_URL } from '../core/api.config';
 
-const API_URL = 'http://localhost:8080/api/auth';
+const API_URL = `${API_BASE_URL}/auth`;
 const ACCESS_TOKEN_KEY = 'hubstaff.accessToken';
 const USER_KEY = 'hubstaff.user';
 
